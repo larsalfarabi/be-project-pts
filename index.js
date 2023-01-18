@@ -1,18 +1,19 @@
-// --- pertemuan pertama ---
-
-const http = require("http");
-const { smk, bilangan } = require("./example");
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.write(bilangan(100));
-  res.write(smk);
-  res.end();
-});
-
+const express = require("express");
+const app = express();
+const port = 8080;
+const routers = require("./src/routes/index");
+const authMiddleware = require("./src/middleware/authMiddleware");
+const notFound = require("./src/middleware/404");
+const errorHandling = require("./src/middleware/errorhandling");
 const hostname = "localhost";
-const port = 8085;
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
 
+// parse JSON
+app.use(express.json());
+// app.use(authMiddleware);
+app.use(routers);
+app.use(errorHandling);
+app.use(notFound);
+
+app.listen(port, hostname, () =>
+  console.log(`Server berjalan di http://${hostname}:${port}`)
+);
