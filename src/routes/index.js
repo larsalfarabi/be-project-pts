@@ -32,7 +32,7 @@ const {
 const jwtValidateMiddleware = require("../middleware/JwtValidateMiddleware");
 const {
   createArtikel,
-  getListArtikel,
+  getArtikel,
   updateArtikel,
   deleteArtikel,
   creatingArtikelBulk,
@@ -40,7 +40,6 @@ const {
   deleteArtikelMulti,
 } = require("../controller/artikelController");
 const routers = express.Router();
-
 
 // *--- AUTH
 routers.post("/register", register);
@@ -77,7 +76,7 @@ routers.put(
 routers.delete("/user/delete/:id", deleteUser);
 
 // *--- artikel
-routers.get("/artikel/list", getListArtikel);
+routers.get("/artikel/list", getArtikel);
 routers.post("/artikel/create", createArtikel);
 routers.put("/artikel/update/:id", updateArtikel);
 routers.delete("/artikel/delete/:id", deleteArtikel);

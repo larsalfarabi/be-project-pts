@@ -1,6 +1,6 @@
 const artikelModel = require("../models").artikel;
 const { Op } = require("sequelize");
-
+const { checkQuery } = require("../utils");
 async function createArtikel(req, res) {
   try {
     const payload = req.body;
@@ -91,60 +91,84 @@ async function createArtikel(req, res) {
 //   }
 // }
 
-async function getListArtikel(req, res) {
+async function getArtikel(req, res) {
   try {
-    const {
+    let {
+      title,
+      dari_tahun,
+      sampai_tahun,
       keyword,
       year,
       page,
       pageSize,
       offset,
-      sortBy = id,
-      orderBy = "desc",
+      sortBy = "id",
+      orderBy = "ASC",
+      isAll,
     } = req.query;
+    // const artikel = await ArtikelModel.findAll({
+    //   where: {
+    //     userID: req.id,
+    //   },
+    // });
     const artikel = await artikelModel.findAndCountAll({
-      //* --- data yang ingin disembunyikan ---
+      // attributes: ['id', ['title', 'judul'], 'description'] --As
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
-      // where: {
-      // [Op.or]: {
-      //   title: {
-      //     [Op.substring]: keyword,
-      //   },
-      //   description: {
-      //     [Op.substring]: keyword,
-      //   },
-      // },
-      // year: {
-      //   [Op.gte]: year,
-      // },
-      // },
-      order: [["id", orderBy]],
+      where: {
+        ...(checkQuery(isAll) &&
+          isAll != 1 && {
+            userID: req.id,
+          }),
+
+        ...(checkQuery(keyword) && {
+          [Op.or]: [
+            {
+              year: {
+                [Op.substring]: keyword,
+              },
+            },
+            {
+              title: {
+                [Op.substring]: keyword,
+              },
+            },
+            {
+              description: {
+                [Op.substring]: keyword,
+              },
+            },
+          ],
+        }),
+        ...(checkQuery(year) && {
+          year: {
+            [Op.gte]: year,
+          },
+        }),
+      },
+
       limit: pageSize,
       offset: offset,
+      order: [[sortBy, orderBy]],
     });
+
     res.json({
-      status: "berhasil",
-      msg: "artikel ditemukan",
+      status: 200,
+      msg: "Artikel was successfully",
       pagination: {
         currentPage: page,
         pageSize: pageSize,
         totalData: artikel.count,
-        totalPage: artikel.count / pageSize,
+        // totalPage: artikel.count / page,
       },
-      data: artikel,
-
-      // query: {
-      //   title,
-      //   dari_tahun,
-      //   sampai_tahun,
-      // },
+      data: artikel.rows,
     });
   } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      msg: "artikel tidak ditemukan",
+    console.log(err);
+    res.status(403).json({
+      status: "404 Not Found",
+      msg: "Ada Kesalahan",
     });
   }
 }
@@ -321,7 +345,7 @@ async function deleteArtikelMulti(req, res) {
 
 module.exports = {
   createArtikel,
-  getListArtikel,
+  getArtikel,
   updateArtikel,
   deleteArtikel,
   creatingArtikelBulk,
