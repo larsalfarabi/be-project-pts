@@ -1,9 +1,37 @@
 const UserModel = require("../models").user;
-
+const { Op } = require("sequelize");
+const models = require("../models");
+const checkQuery = require("../utils/queryString");
 // *---- get semua user
 async function getListUser(req, res) {
   try {
-    const users = await UserModel.findAll();
+    const { mapel } = req.query;
+    const users = await UserModel.findAll({
+      attributes: {
+        exclude: ["tempatLahir", "tanggalLahir", "createdAt", "updatedAt"],
+      },
+      include: [
+        {
+          model: models.identitas,
+          require: true,
+          as: "identitas",
+          attributes: ["id", "nama", "alamat", "tempatLahir", "tanggalLahir"],
+        },
+        {
+          model: models.nilai,
+          required: true,
+          as: "nilai",
+          attributes: ["mapel", "nilai"],
+          where: {
+            ...(checkQuery(mapel) && {
+              mapel: {
+                [Op.substring]: mapel,
+              },
+            }),
+          },
+        },
+      ],
+    });
     res.json({
       status: "berhasil",
       msg: "Data ditemukan",
@@ -47,7 +75,26 @@ async function getListUserById(req, res) {
   try {
     const { id } = req.params;
 
-    const user = await UserModel.findByPk(id);
+    const user = await UserModel.findOne({
+      attributes: {
+        exclude: ["tempatLahir", "tanggalLahir", "createdAt", "updatedAt"],
+      },
+      where: { id: id },
+      include: [
+        {
+          model: models.identitas,
+          require: true,
+          as: "identitas",
+          attributes: ["id", "nama", "alamat", "tempatLahir", "tanggalLahir"],
+        },
+        {
+          model: models.nilai,
+          required: true,
+          as: "nilai",
+          attributes: ["mapel", "nilai"],
+        },
+      ],
+    });
 
     if (user === null) {
       res.status(404).json({

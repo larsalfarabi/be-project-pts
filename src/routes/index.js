@@ -39,6 +39,7 @@ const {
   createArtikelMulti,
   deleteArtikelMulti,
 } = require("../controller/artikelController");
+const getListNilai = require("../controller/nilaiController");
 const routers = express.Router();
 
 // *--- AUTH
@@ -74,6 +75,9 @@ routers.put(
   updateUser
 );
 routers.delete("/user/delete/:id", deleteUser);
+
+// *--- nilal
+routers.get("/nilai/list", getListNilai);
 
 // *--- artikel
 routers.get("/artikel/list", getArtikel);
