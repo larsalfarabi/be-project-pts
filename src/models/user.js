@@ -9,19 +9,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      user.hasOne(models.identitas, { as: "identitas", foreignKey: "userId" });
-      user.hasMany(models.nilai, { as: "nilai", foreignKey: "userId" });
+      user.belongsTo(models.outlet, {
+        as: "outlet",
+        foreignKey:'id_outlet'
+      })
     }
   }
   user.init(
     {
-      name: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
-      isEmailVerified: DataTypes.DATEONLY,
-      isActive: DataTypes.BOOLEAN,
-      tempatLahir: DataTypes.STRING,
-      tanggalLahir: DataTypes.DATEONLY,
+      nama: DataTypes.STRING(100),
+      username: DataTypes.STRING(30),
+      password: DataTypes.TEXT,
+      id_outlet: DataTypes.INTEGER(11),
+      role: DataTypes.ENUM("admin", "kasir", "owner"),
     },
     {
       sequelize,
