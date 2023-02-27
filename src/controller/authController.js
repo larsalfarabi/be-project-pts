@@ -26,7 +26,7 @@ async function register(req, res) {
       msg: "berhasil register",
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(403).json({
       status: "gagal",
       msg: "Ada kesalahan",
@@ -64,8 +64,10 @@ async function login(req, res) {
     const token = await jwt.sign(
       {
         id: user?.id,
-        email: user?.email,
-        name: user?.name,
+        nama: user?.nama,
+        username: user?.username,
+        id_outlet: user?.id_outlet,
+        role: user?.role,
       },
       process.env.JWT_SCRIPT,
       {
