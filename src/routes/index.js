@@ -1,21 +1,5 @@
 const express = require("express");
-
-const {
-  register,
-  login,
-  updatePassword,
-  lupaPassword,
-  lupaPasswordTugas,
-  lupaPasswordEmail,
-} = require("../controller/authController");
-
-const validationResultMiddleware = require("../middleware/validationResultMiddleware");
-const createProdukValidator = require("../validators/produkValidator");
-const {
-  createUserValidator,
-  updateUserValidator,
-  updateNewPassword,
-} = require("../validators/userValidator");
+const { register, login, authMe } = require("../controller/authController");
 const jwtValidateMiddleware = require("../middleware/JwtValidateMiddleware");
 const {
   outletCreate,
@@ -24,18 +8,21 @@ const {
   outletDelete,
 } = require("../controller/outletController");
 const roleMiddleware = require("../middleware/roleMiddleWare");
-
 const routers = express.Router();
+const cors = require("cors");
+
+routers.use(cors());
 
 // *--- AUTH
 routers.post("/register", register);
 routers.post("/login", login);
-routers.post("/lupa-password", lupaPassword);
-routers.put("/reset-password/:userId/:token", lupaPasswordEmail);
 
 // *--- implementasi JWT(json web token) validate middleware
 routers.use(jwtValidateMiddleware);
 routers.use(roleMiddleware);
+
+// *--- Authme
+routers.get("/authme", authMe);
 
 // *--- outlet
 routers.get("/outlet/list", getListOutlet);
