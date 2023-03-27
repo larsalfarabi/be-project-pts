@@ -9,13 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      member.hasMany(models.transaksi, {
+        as: "transaksi",
+        foreignKey: "id_outlet",
+      });
     }
   }
   member.init(
     {
       nama: DataTypes.STRING(100),
       alamat: DataTypes.TEXT,
-      jenis_kelamin: DataTypes.ENUM("l", "p"),
+      jenis_kelamin: DataTypes.ENUM("Laki-Laki", "Perempuan"),
       tlp: DataTypes.STRING(15),
     },
     {

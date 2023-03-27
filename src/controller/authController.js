@@ -13,6 +13,7 @@ async function register(req, res) {
     await UserModel.create({
       nama,
       username,
+
       password: hashPassword,
       id_outlet,
       role,
@@ -23,7 +24,7 @@ async function register(req, res) {
     });
   } catch (err) {
     console.log(err);
-    res.status(403).json({
+    return res.status(403).json({
       status: "gagal",
       msg: "Ada kesalahan",
     });
@@ -33,10 +34,10 @@ async function register(req, res) {
 async function login(req, res) {
   try {
     const payload = req.body;
-    const { username, password } = payload;
-    const data = await UserModel.findOne({
-      attributes: { exclude: ["password"] },
-    });
+    const { username, password, uid } = payload;
+    // const data = await UserModel.findOne({
+    //   attributes: { exclude: ["password"] },
+    // });
     const user = await UserModel.findOne({
       where: {
         username: username,
@@ -72,12 +73,13 @@ async function login(req, res) {
         msg: "Username dan password tidak cocok",
       });
     }
+    console.log(req.body);
 
     return res.json({
       status: "berhasil",
       msg: "Berhasil login",
       token: token,
-      data: data,
+      data: user,
     });
   } catch (err) {
     console.log(err);
@@ -93,6 +95,7 @@ async function authMe(req, res) {
     const username = req.username;
 
     const user = await UserModel.findOne({
+      attributes: { exclude: ["password"] },
       where: {
         username: username,
       },

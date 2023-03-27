@@ -1,10 +1,15 @@
-const roleMiddleware = (req, res, next) => {
+const kasirMiddleware = (req, res, next) => {
   if (req.role == "kasir") {
     return res.status(403).json({
       status: "error",
       msg: "Anda tidak memiliki akses karena role anda adalah kasir",
     });
-  } else if (req.role == "owner") {
+  } else {
+    next();
+  }
+};
+const ownerMiddleware = (req, res, next) => {
+  if (req.role == "owner") {
     return res.status(403).json({
       status: "error",
       msg: "Anda tidak memiliki akses karena role anda adalah owner",
@@ -13,5 +18,4 @@ const roleMiddleware = (req, res, next) => {
     next();
   }
 };
-
-module.exports = roleMiddleware;
+module.exports = { kasirMiddleware, ownerMiddleware };

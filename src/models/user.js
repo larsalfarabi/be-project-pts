@@ -11,8 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       user.belongsTo(models.outlet, {
         as: "outlet",
-        foreignKey:'id_outlet'
-      })
+        foreignKey: "id_outlet",
+      });
+      user.hasMany(models.transaksi, {
+        as: "transaksi",
+        foreignKey: "id_user",
+      });
     }
   }
   user.init(

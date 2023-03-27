@@ -1,30 +1,31 @@
 const { check } = require("express-validator");
-const UserModel = require("../models").user;
 
 const createUserValidator = [
-  check("name").isLength({ min: 1 }).withMessage("nama wajib diisi"),
-  check("email")
-    .isEmail()
-    .withMessage("gunakan format email")
-    .custom((value) => {
-      return UserModel.findOne({
-        where: {
-          email: value,
-        },
-      }).then((user) => {
-        if (user) {
-          return Promise.reject("E-mail already in use");
-        }
-      });
-    }),
+  check("nama").isLength({ min: 1 }).withMessage("Nama wajib diisi"),
+  check("username")
+    .isLength({ min: 5 })
+    .withMessage("must be at least 5 chars long"),
+  check("password")
+    .isLength({ min: 5 })
+    .withMessage("must be at least 5 chars long")
+    .matches(/\d/)
+    .withMessage("must contain a number"),
+  check("role")
+    .isIn(["kasir", "owner", "admin"])
+    .withMessage("role must be admin | owner | kasir"),
 ];
 
 const updateUserValidator = [
-  check("name").isLength({ min: 1 }).withMessage("nama wajib diisi"),
+  check("nama").isLength({ min: 1 }).withMessage("Nama wajib diisi"),
+  check("username")
+    .isLength({ min: 5 })
+    .withMessage("must be at least 5 chars long"),
+  check("role")
+    .isIn(["kasir", "owner", "admin"])
+    .withMessage("role must be admin | owner | kasir"),
 ];
 
-const updateNewPassword = [
-  check('new_password').isLength({min: 8}).withMessage('password harus lebih dari 8')
-]
-
-module.exports = { createUserValidator, updateUserValidator , updateNewPassword};
+module.exports = {
+  createUserValidator,
+  updateUserValidator,
+};

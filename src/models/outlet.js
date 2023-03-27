@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
         as: "user",
         foreignKey: "id_outlet",
       });
+      outlet.hasOne(models.paket, {
+        as: "paket",
+        foreignKey: "id_outlet",
+      });
+      outlet.hasMany(models.transaksi, {
+        as: "transaksi",
+        foreignKey: "id_outlet",
+      });
     }
   }
   outlet.init(

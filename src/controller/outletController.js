@@ -69,6 +69,29 @@ async function getListOutlet(req, res) {
   }
 }
 
+async function getDetailOutlet(req, res) {
+  try {
+    const { id } = req.params;
+    const outlet = await models.outlet.findByPk(id);
+    if (outlet === null) {
+      return res.status(422).json({
+        status: "gagal",
+        msg: "Outlet Tidak Ditemukan",
+      });
+    }
+    res.json({
+      status: "berhasil",
+      msg: "Berhasil Menemukan Detail Outlet",
+      data: outlet,
+    });
+  } catch (error) {
+    res.status(422).json({
+      status: "gagal",
+      msg: "Ada Kesalahan",
+    });
+  }
+}
+
 async function outletUpdate(req, res) {
   try {
     const { id } = req.params;
@@ -132,4 +155,10 @@ async function outletDelete(req, res) {
     });
   }
 }
-module.exports = { outletCreate, getListOutlet, outletUpdate, outletDelete };
+module.exports = {
+  outletCreate,
+  getListOutlet,
+  outletUpdate,
+  outletDelete,
+  getDetailOutlet,
+};
