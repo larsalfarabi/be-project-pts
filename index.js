@@ -1,12 +1,14 @@
 const express = require("express");
+require("dotenv").config();
 const app = express();
-const port = 8080;
+const port = process.env.PORT;
 const { sequelize } = require("./src/models");
 const routers = require("./src/routes/index");
 const notFound = require("./src/middleware/404");
 const errorHandling = require("./src/middleware/errorhandling");
 const hostname = "localhost";
 const paginationMiddleWare = require("./src/middleware/paginationMidlleWare");
+
 // parse JSON
 app.use(express.json());
 app.use(paginationMiddleWare);
