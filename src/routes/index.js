@@ -21,6 +21,8 @@ const {
   createUser,
   updateUser,
   deleteUser,
+  userRole,
+  getUserAndRole,
 } = require("../controller/UserController");
 const validationResultMiddleware = require("../middleware/validationResultMiddleware");
 const createProdukValidator = require("../validators/produkValidator");
@@ -48,6 +50,10 @@ routers.post("/login", login);
 routers.post("/lupa-password", lupaPassword);
 routers.put("/reset-password/:userId/:token", lupaPasswordEmail);
 
+// *--- user role
+routers.get("/user/role/user-role", userRole);
+routers.get("/user/user-and-role", getUserAndRole);
+
 // *--- implementasi JWT(json web token) validate middleware
 routers.use(jwtValidateMiddleware);
 
@@ -62,6 +68,7 @@ routers.put(
 routers.get("/user/list", getListUser);
 routers.get("/user/detail/:id", getListUserById);
 routers.get("/user/list/:email", getDetailUserByParams);
+
 routers.post(
   "/create/user",
   createUserValidator,

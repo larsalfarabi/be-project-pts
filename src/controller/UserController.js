@@ -219,6 +219,60 @@ async function deleteUser(req, res) {
     });
   }
 }
+
+async function userRole(req, res) {
+  try {
+    const data = await UserModel.findAndCountAll({
+      attributes: ["id", ["name", "nama"], "email"],
+      include: [
+        {
+          model: models.role,
+          require: true,
+          as: "roles",
+          attributes: ["id", "namaRole"],
+          through: {
+            attributes: ["id", "userId", "roleId"],
+          },
+        },
+      ],
+    });
+    res.json({
+      data: data,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(404).send("not ok :(");
+  }
+}
+
+async function getUserAndRole(req, res) {
+  try {
+    const data = await models.userRole.findAndCountAll({
+      attributes: ["id"],
+      include: [
+        {
+          model: models.user,
+          require: true,
+          as: "users",
+          attributes: ["id", ["name", "nama"]],
+        },
+        {
+          model: models.role,
+          require: true,
+          as: "roles",
+          attributes: ["id", "namaRole"],
+        },
+      ],
+    });
+    res.json({
+      msg: "Berhasil",
+      data: data,
+    });
+  } catch (error) {
+    console.log(err);
+    return res.status(404).send("not ok :(");
+  }
+}
 module.exports = {
   getListUser,
   getListUserById,
@@ -226,4 +280,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  userRole,
+  getUserAndRole,
 };

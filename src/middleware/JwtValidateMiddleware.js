@@ -7,7 +7,7 @@ const jwtValidateMiddleware = (req, res, next) => {
   const bearerHeader = authorization.split(" ");
   const token = bearerHeader[1];
 
-  jwt.verify(token, process.env.JWT_SCRIPT, function (err, decoded) {
+  jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
     if (err) {
       return res.status(401).json({
         status: "fail",

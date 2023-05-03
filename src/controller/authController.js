@@ -64,7 +64,7 @@ async function login(req, res) {
         email: user?.email,
         name: user?.name,
       },
-      process.env.JWT_SCRIPT,
+      process.env.JWT_SECRET,
       {
         expiresIn: "7d",
       }
@@ -84,6 +84,7 @@ async function login(req, res) {
       user: user,
     });
   } catch (err) {
+    console.log(err);
     res.status(403).json({
       status: "gagal",
       msg: "Ada kesalahan",
@@ -324,8 +325,7 @@ async function lupaPasswordEmail(req, res) {
     } else {
       let userExpired = currenToken.expireDate;
       let expire = dayjs(Date());
-      console.log(expire
-      )
+      console.log(expire);
       let difference = expire.diff(userExpired, "hour");
       if (difference !== 0) {
         res.json({
