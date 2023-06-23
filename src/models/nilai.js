@@ -9,17 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      nilai.belongsTo(models.user, {
-        as: "user",
-        foreignKey: "userId",
-      });
     }
   }
   nilai.init(
     {
-      userId: DataTypes.INTEGER,
-      mapel: DataTypes.STRING,
-      nilai: DataTypes.DECIMAL(4, 2),
+      user_id: DataTypes.INTEGER,
+      guru_id: DataTypes.INTEGER,
+      mapel_id: DataTypes.INTEGER,
+      nilai: DataTypes.INTEGER,
     },
     {
       sequelize,

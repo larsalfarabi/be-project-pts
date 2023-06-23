@@ -9,28 +9,40 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      user.hasOne(models.identitas, { as: "identitas", foreignKey: "userId" });
-      user.hasMany(models.nilai, { as: "nilai", foreignKey: "userId" });
-      user.belongsToMany(models.role, {
-        through: models.userRole,
-        as: "roles",
-        foreignKey: "userId",
+      user.hasMany(models.chatRoom, {
+        as: "chatRoomNama1",
+        foreignKey: "nama1",
       });
-      user.hasMany(models.userRole, {
-        as: "userWithRole",
-        foreignKey: "userId",
+      user.hasMany(models.chatRoom, {
+        as: "chatRoomNama2",
+        foreignKey: "nama2",
+      });
+      user.hasMany(models.conversation, {
+        as: "conversationSender",
+        foreignKey: "sender",
+      });
+      user.hasMany(models.chatRoom, {
+        as: "conversationTo",
+        foreignKey: "to",
+      });
+      user.hasMany(models.groupRoom, {
+        as: "member_group",
+        foreignKey: "member",
+      });
+      user.hasMany(models.conversationGroup, {
+        as: "conversationGroupSender",
+        foreignKey: "sender",
+      });
+      user.hasMany(models.conversationGroup, {
+        as: "conversationGroupTo",
+        foreignKey: "to",
       });
     }
   }
   user.init(
     {
-      name: DataTypes.STRING,
-      email: DataTypes.STRING,
+      nama: DataTypes.STRING,
       password: DataTypes.STRING,
-      isEmailVerified: DataTypes.DATEONLY,
-      isActive: DataTypes.BOOLEAN,
-      tempatLahir: DataTypes.STRING,
-      tanggalLahir: DataTypes.DATEONLY,
     },
     {
       sequelize,
